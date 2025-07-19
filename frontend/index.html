@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Document Annotation System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/annotation.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading OCR Annotation System...</div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Navigation Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <h1 class="app-title">
+                        <span class="app-icon">📄</span>
+                        OCR Document Annotation
+                    </h1>
+                    <nav class="main-nav">
+                        <button class="nav-btn active" data-page="upload">
+                            📤 Upload & Train
+                        </button>
+                        <button class="nav-btn" data-page="annotate">
+                            ✏️ Annotate
+                        </button>
+                        <button class="nav-btn" data-page="inference">
+                            🔍 Extract
+                        </button>
+                        <button class="nav-btn" data-page="results">
+                            📊 Results
+                        </button>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status" id="connection-status">
+                        <span class="status-indicator"></span>
+                        <span class="status-text">Connecting...</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Upload & Training Page -->
+            <div id="upload-page" class="page active">
+                <div class="page-header">
+                    <h2>📤 Upload Training Documents</h2>
+                    <p>Upload documents and create categories for OCR model training</p>
+                </div>
+                
+                <div class="content-grid">
+                    <!-- Category Management -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📁 Categories</h3>
+                            <button class="btn btn-primary" id="create-category-btn">
+                                + New Category
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="categories-list" class="categories-list">
+                                <!-- Categories will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Upload -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📄 Upload Documents</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="upload-area">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">
+                                    <p>Drag & drop files here or click to browse</p>
+                                    <small>Supports: PNG, JPG, JPEG, PDF, TIFF, BMP</small>
+                                </div>
+                                <input type="file" id="file-input" multiple accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp" hidden>
+                            </div>
+                            
+                            <div class="category-selector" style="display: none;">
+                                <label for="document-category">Select Category:</label>
+                                <select id="document-category" class="form-select">
+                                    <option value="">Choose a category...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Training Documents</h3>
+                        <div class="header-actions">
+                            <button class="btn btn-success" id="train-model-btn" disabled>
+                                🚀 Train Model
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="documents-list" class="documents-grid">
+                            <!-- Documents will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annotation Page -->
+            <div id="annotate-page" class="page">
+                <div class="annotation-interface">
+                    <!-- Annotation Header -->
+                    <div class="annotation-header">
+                        <div class="header-left">
+                            <button class="btn btn-secondary" id="back-to-upload">
+                                ← Back
+                            </button>
+                            <h2>✏️ Document Annotation</h2>
+                            <span class="document-name" id="current-document-name"></span>
+                        </div>
+                        <div class="header-right">
+                            <div class="save-status" id="save-status">
+                                <span class="save-indicator"></span>
+                                <span class="save-text">Saved</span>
+                            </div>
+                            <button class="btn btn-primary" id="save-annotations">
+                                💾 Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Annotation Workspace -->
+                    <div class="annotation-workspace">
+                        <!-- Toolbar -->
+                        <div class="annotation-toolbar">
+                            <div class="tool-group">
+                                <button class="tool-btn active" data-tool="select" title="Select Tool">
+                                    👆
+                                </button>
+                                <button class="tool-btn" data-tool="rectangle" title="Rectangle Tool">
+                                    ⬜
+                                </button>
+                                <button class="tool-btn" data-tool="polygon" title="Polygon Tool">
+                                    🔷
+                                </button>
+                            </div>
+                            
+                            <div class="tool-group">
+                                <button class="tool-btn" data-tool="zoom-in" title="Zoom In">
+                                    🔍+
+                                </button>
+                                <button class="tool-btn" data-tool="zoom-out" title="Zoom Out">
+                                    🔍-
+                                </button>
+                                <button class="tool-btn" data-tool="fit" title="Fit to Screen">
+                                    📐
+                                </button>
+                            </div>
+                            
+                            <div class="tool-group">
+                                <button class="tool-btn" data-tool="undo" title="Undo">
+                                    ↶
+                                </button>
+                                <button class="tool-btn" data-tool="redo" title="Redo">
+                                    ↷
+                                </button>
+                            </div>
+                            
+                            <div class="tool-group">
+                                <button class="tool-btn" data-tool="delete" title="Delete Selected">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas Area -->
+                        <div class="canvas-container">
+                            <canvas id="annotation-canvas" class="annotation-canvas"></canvas>
+                            <div class="canvas-overlay" id="canvas-overlay"></div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="annotation-sidebar">
+                            <!-- Annotations List -->
+                            <div class="sidebar-section">
+                                <h4>📝 Annotations</h4>
+                                <div id="annotations-list" class="annotations-list">
+                                    <!-- Annotations will be listed here -->
+                                </div>
+                            </div>
+
+                            <!-- Properties Panel -->
+                            <div class="sidebar-section">
+                                <h4>⚙️ Properties</h4>
+                                <div id="properties-panel" class="properties-panel">
+                                    <p class="no-selection">Select an annotation to edit properties</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inference Page -->
+            <div id="inference-page" class="page">
+                <div class="page-header">
+                    <h2>🔍 Document Extraction</h2>
+                    <p>Extract data from documents using trained models</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📄 Upload Document</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="inference-upload-area">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">
+                                    <p>Upload document for data extraction</p>
+                                </div>
+                                <input type="file" id="inference-file-input" accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp" hidden>
+                            </div>
+                            
+                            <div class="model-selector">
+                                <label for="inference-category">Select Model:</label>
+                                <select id="inference-category" class="form-select">
+                                    <option value="">Choose a trained model...</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="run-inference" disabled>
+                                🚀 Extract Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 Extraction Results</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="inference-results" class="inference-results">
+                                <p class="no-results">Upload a document and run extraction to see results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Page -->
+            <div id="results-page" class="page">
+                <div class="page-header">
+                    <h2>📊 Extraction Results</h2>
+                    <p>View and manage extracted data from documents</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📈 Results Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="results-overview" class="results-overview">
+                            <!-- Results overview will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <!-- Category Creation Modal -->
+        <div id="category-modal" class="modal">
+            <div class="modal-header">
+                <h3>Create New Category</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="category-form">
+                    <div class="form-group">
+                        <label for="category-name">Category Name:</label>
+                        <input type="text" id="category-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-type">Model Type:</label>
+                        <select id="category-type" class="form-select">
+                            <option value="cloud">Cloud (Nanonets)</option>
+                            <option value="hf">Hugging Face</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-category">Cancel</button>
+                <button class="btn btn-primary" id="create-category">Create</button>
+            </div>
+        </div>
+
+        <!-- Field Selection Modal -->
+        <div id="field-modal" class="modal">
+            <div class="modal-header">
+                <h3>Select Field Type</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="field-types" class="field-types">
+                    <!-- Field types will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/canvas.js"></script>
+    <script src="js/components/annotation-engine.js"></script>
+    <script src="js/pages/upload.js"></script>
+    <script src="js/pages/annotate.js"></script>
+    <script src="js/pages/inference.js"></script>
+    <script src="js/pages/results.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

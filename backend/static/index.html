@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Document Annotation System</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/annotation.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/modern-theme.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading OCR Annotation System...</div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app" class="app-container" style="display: none;">
+        <!-- Left Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                    </div>
+                    <div class="brand-text">
+                        <h1 class="brand-title">OCR Studio</h1>
+                        <p class="brand-subtitle">Document Annotation</p>
+                    </div>
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">Main</h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-page="upload">
+                                <div class="nav-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                                    </svg>
+                                </div>
+                                <span class="nav-text">Upload & Train</span>
+                                <div class="nav-indicator"></div>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-page="annotate">
+                                <div class="nav-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/>
+                                    </svg>
+                                </div>
+                                <span class="nav-text">Annotate</span>
+                                <div class="nav-indicator"></div>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-page="inference">
+                                <div class="nav-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                                    </svg>
+                                </div>
+                                <span class="nav-text">Extract</span>
+                                <div class="nav-indicator"></div>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" data-page="results">
+                                <div class="nav-icon">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M3,3H21A2,2 0 0,1 23,5V19A2,2 0 0,1 21,21H3A2,2 0 0,1 1,19V5A2,2 0 0,1 3,3M5,7V9H19V7H5M5,11V13H19V11H5M5,15V17H19V15H5Z"/>
+                                    </svg>
+                                </div>
+                                <span class="nav-text">Results</span>
+                                <div class="nav-indicator"></div>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="connection-status" id="connection-status">
+                    <div class="status-indicator"></div>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="main-wrapper">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z"/>
+                        </svg>
+                    </button>
+                    <div class="page-title" id="page-title">
+                        <h2>Upload & Train</h2>
+                        <p class="page-subtitle">Manage your training documents</p>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+                        <svg class="theme-icon-light" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12,8A4,4 0 0,0 8,12A4,4 0 0,0 12,16A4,4 0 0,0 16,12A4,4 0 0,0 12,8M12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6A6,6 0 0,1 18,12A6,6 0 0,1 12,18M20,8.69V4H15.31L12,0.69L8.69,4H4V8.69L0.69,12L4,15.31V20H8.69L12,23.31L15.31,20H20V15.31L23.31,12L20,8.69Z"/>
+                        </svg>
+                        <svg class="theme-icon-dark" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M17.75,4.09L15.22,6.03L16.13,9.09L13.5,7.28L10.87,9.09L11.78,6.03L9.25,4.09L12.44,4L13.5,1L14.56,4L17.75,4.09M21.25,11L19.61,12.25L20.2,14.23L18.5,13.06L16.8,14.23L17.39,12.25L15.75,11L17.81,10.95L18.5,9L19.19,10.95L21.25,11M18.97,15.95C19.8,15.87 20.69,17.05 20.16,17.8C19.84,18.25 19.5,18.67 19.08,19.07C15.17,23 8.84,23 4.94,19.07C1.03,15.17 1.03,8.83 4.94,4.93C5.34,4.53 5.76,4.17 6.21,3.85C6.96,3.32 8.14,4.21 8.06,5.04C7.79,7.9 8.75,10.87 10.95,13.06C13.14,15.26 16.1,16.22 18.97,15.95M17.33,17.97C14.5,17.81 11.7,16.64 9.53,14.5C7.36,12.31 6.2,9.5 6.04,6.68C3.23,9.82 3.34,14.4 6.35,17.41C9.37,20.43 14,20.54 17.33,17.97Z"/>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <!-- Upload & Training Page -->
+                <div id="upload-page" class="page active">
+                    <div class="page-content">
+                
+                <div class="content-grid">
+                    <!-- Category Management -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📁 Categories</h3>
+                            <button class="btn btn-primary" id="create-category-btn">
+                                + New Category
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="categories-list" class="categories-list">
+                                <!-- Categories will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Upload -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📄 Upload Documents</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="upload-area">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">
+                                    <p>Drag & drop files here or click to browse</p>
+                                    <small>Supports: PNG, JPG, JPEG, PDF, TIFF, BMP</small>
+                                </div>
+                                <input type="file" id="file-input" multiple accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp" hidden>
+                            </div>
+                            
+                            <div class="category-selector" style="display: none;">
+                                <label for="document-category">Select Category:</label>
+                                <select id="document-category" class="form-select">
+                                    <option value="">Choose a category...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Documents List -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📋 Training Documents</h3>
+                        <div class="header-actions">
+                            <button class="btn btn-success" id="train-model-btn" disabled>
+                                🚀 Train Model
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="documents-list" class="documents-grid">
+                            <!-- Documents will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Annotation Page -->
+            <div id="annotate-page" class="page">
+                <div class="annotation-interface">
+                    <!-- Annotation Header -->
+                    <div class="annotation-header">
+                        <div class="header-left">
+                            <button class="btn btn-secondary" id="back-to-upload">
+                                ← Back
+                            </button>
+                            <h2>✏️ Document Annotation</h2>
+                            <span class="document-name" id="current-document-name"></span>
+                        </div>
+                        <div class="header-right">
+                            <div class="save-status" id="save-status">
+                                <span class="save-indicator"></span>
+                                <span class="save-text">Saved</span>
+                            </div>
+                            <button class="btn btn-primary" id="save-annotations">
+                                💾 Save
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Annotation Workspace -->
+                    <div class="annotation-workspace">
+                        <!-- Enhanced Toolbar -->
+                        <div class="annotation-toolbar">
+                            <div class="toolbar-section">
+                                <h4 class="toolbar-title">Tools</h4>
+                                <div class="tool-group">
+                                    <button class="tool-btn active" data-tool="select" title="Select Tool (V)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M13.64,21.97C13.14,22.21 12.54,22 12.31,21.5L10.13,16.76L7.62,18.78C7.45,18.92 7.24,19 7,19A1,1 0 0,1 6,18V3A1,1 0 0,1 7,2C7.24,2 7.45,2.08 7.62,2.22L18.78,12.22C19.28,12.64 19.28,13.36 18.78,13.78L15.44,16.5L17.92,21.5C18.15,22 17.94,22.6 17.44,22.83C16.94,23.06 16.34,22.85 16.11,22.35L13.64,21.97Z"/>
+                                        </svg>
+                                        <span class="tool-label">Select</span>
+                                    </button>
+                                    <button class="tool-btn" data-tool="rectangle" title="Rectangle Tool (R)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3,3V21H21V3H3M5,5H19V19H5V5Z"/>
+                                        </svg>
+                                        <span class="tool-label">Rectangle</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="toolbar-section">
+                                <h4 class="toolbar-title">View</h4>
+                                <div class="tool-group">
+                                    <button class="tool-btn" data-tool="zoom-in" title="Zoom In (+)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M15.5,14H20.5L19,15.5L23,19.5L19.5,23L15.5,19L14,20.5V15.5L15.5,14M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                                        </svg>
+                                        <span class="tool-label">Zoom In</span>
+                                    </button>
+                                    <button class="tool-btn" data-tool="zoom-out" title="Zoom Out (-)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M15.5,14L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+                                        </svg>
+                                        <span class="tool-label">Zoom Out</span>
+                                    </button>
+                                    <button class="tool-btn" data-tool="fit" title="Fit to Screen (0)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M9,9V15H15V9H9M11,11H13V13H11V11M2,3V9H4V5H8V3H2M2,15V21H8V19H4V15H2M16,3V5H20V9H22V3H16M20,15V19H16V21H22V15H20Z"/>
+                                        </svg>
+                                        <span class="tool-label">Fit Screen</span>
+                                    </button>
+                                </div>
+
+                                <!-- Zoom Slider -->
+                                <div class="zoom-controls">
+                                    <label class="zoom-label">Zoom</label>
+                                    <div class="zoom-slider-container">
+                                        <input type="range" class="zoom-slider" id="zoom-slider"
+                                               min="10" max="500" value="100" step="10">
+                                        <span class="zoom-value" id="zoom-value">100%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="toolbar-section">
+                                <h4 class="toolbar-title">Actions</h4>
+                                <div class="tool-group">
+                                    <button class="tool-btn" data-tool="undo" title="Undo (Ctrl+Z)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M12.5,8C13.3,8 14,8.7 14,9.5V11H16V9.5C16,7.6 14.4,6 12.5,6S9,7.6 9,9.5V10.5L7.5,9L6,10.5L10,14.5L14,10.5L12.5,9L11,10.5V9.5C11,8.7 11.7,8 12.5,8M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z"/>
+                                        </svg>
+                                        <span class="tool-label">Undo</span>
+                                    </button>
+                                    <button class="tool-btn" data-tool="redo" title="Redo (Ctrl+Y)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M18.4,10.6C16.55,8.99 14.15,8.99 12.3,10.6C10.45,12.21 10.45,14.79 12.3,16.4C14.15,18.01 16.55,18.01 18.4,16.4C20.25,14.79 20.25,12.21 18.4,10.6M17,15L13,11V14H11V9.5C11,8.7 11.7,8 12.5,8S14,8.7 14,9.5V11H16V9.5C16,7.6 14.4,6 12.5,6S9,7.6 9,9.5V10.5L7.5,9L6,10.5L10,14.5L14,10.5L12.5,9L11,10.5V9.5C11,8.7 11.7,8 12.5,8M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4Z"/>
+                                        </svg>
+                                        <span class="tool-label">Redo</span>
+                                    </button>
+                                    <button class="tool-btn" data-tool="delete" title="Delete (Del)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19,4H15.5L14.5,3H9.5L8.5,4H5V6H19M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19Z"/>
+                                        </svg>
+                                        <span class="tool-label">Delete</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Canvas Area -->
+                        <div class="canvas-container">
+                            <div class="canvas-wrapper">
+                                <canvas id="annotation-canvas" class="annotation-canvas"></canvas>
+                                <div class="canvas-overlay" id="canvas-overlay"></div>
+
+                                <!-- Canvas Grid -->
+                                <div class="canvas-grid" id="canvas-grid"></div>
+
+                                <!-- Canvas Crosshair -->
+                                <div class="canvas-crosshair" id="canvas-crosshair">
+                                    <div class="crosshair-h"></div>
+                                    <div class="crosshair-v"></div>
+                                </div>
+                            </div>
+
+                            <!-- Enhanced Canvas Controls -->
+                            <div class="canvas-controls">
+                                <div class="control-group">
+                                    <button class="control-btn" id="zoom-in-btn" title="Zoom In (+)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn" id="zoom-out-btn" title="Zoom Out (-)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M19,13H5V11H19V13Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn" id="fit-screen-btn" title="Fit to Screen (0)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M9,9V15H15V9H9M11,11H13V13H11V11M2,3V9H4V5H8V3H2M2,15V21H8V19H4V15H2M16,3V5H20V9H22V3H16M20,15V19H16V21H22V15H20Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="control-group">
+                                    <button class="control-btn" id="toggle-grid-btn" title="Toggle Grid (G)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M8,8H16V16H8V8M6,6V18H18V6H6M4,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4Z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn" id="toggle-crosshair-btn" title="Toggle Crosshair (C)">
+                                        <svg viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M13,1V8H15V1H13M8,5V7H1V5H8M23,5V7H16V5H23M8,17V19H1V17H8M23,17V19H16V17H23M13,16V23H15V16H13M5,8V16H7V8H5M19,8V16H21V8H19M8,8V16H16V8H8M10,10V14H14V10H10Z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Canvas Info Panel -->
+                            <div class="canvas-info">
+                                <div class="info-item">
+                                    <span class="info-label">Zoom:</span>
+                                    <span class="info-value" id="zoom-level">100%</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Position:</span>
+                                    <span class="info-value" id="mouse-position">0, 0</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Size:</span>
+                                    <span class="info-value" id="canvas-size">0 × 0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sidebar -->
+                        <div class="annotation-sidebar">
+                            <!-- Annotations List -->
+                            <div class="sidebar-section">
+                                <h4>📝 Annotations</h4>
+                                <div id="annotations-list" class="annotations-list">
+                                    <!-- Annotations will be listed here -->
+                                </div>
+                            </div>
+
+                            <!-- Properties Panel -->
+                            <div class="sidebar-section">
+                                <h4>⚙️ Properties</h4>
+                                <div id="properties-panel" class="properties-panel">
+                                    <p class="no-selection">Select an annotation to edit properties</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inference Page -->
+            <div id="inference-page" class="page">
+                <div class="page-header">
+                    <h2>🔍 Document Extraction</h2>
+                    <p>Extract data from documents using trained models</p>
+                </div>
+                
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📄 Upload Document</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="upload-area" id="inference-upload-area">
+                                <div class="upload-icon">📁</div>
+                                <div class="upload-text">
+                                    <p>Upload document for data extraction</p>
+                                </div>
+                                <input type="file" id="inference-file-input" accept=".png,.jpg,.jpeg,.pdf,.tiff,.bmp" hidden>
+                            </div>
+                            
+                            <div class="model-selector">
+                                <label for="inference-category">Select Model:</label>
+                                <select id="inference-category" class="form-select">
+                                    <option value="">Choose a trained model...</option>
+                                </select>
+                            </div>
+                            
+                            <button class="btn btn-primary" id="run-inference" disabled>
+                                🚀 Extract Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>📊 Extraction Results</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="inference-results" class="inference-results">
+                                <p class="no-results">Upload a document and run extraction to see results</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Page -->
+            <div id="results-page" class="page">
+                <div class="page-header">
+                    <h2>📊 Extraction Results</h2>
+                    <p>View and manage extracted data from documents</p>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>📈 Results Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="results-overview" class="results-overview">
+                            <!-- Results overview will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </main>
+        </div> <!-- End main-wrapper -->
+    </div> <!-- End app-container -->
+
+    <!-- Modals -->
+    <div id="modal-overlay" class="modal-overlay" style="display: none;">
+        <!-- Category Creation Modal -->
+        <div id="category-modal" class="modal">
+            <div class="modal-header">
+                <h3>Create New Category</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="category-form">
+                    <div class="form-group">
+                        <label for="category-name">Category Name:</label>
+                        <input type="text" id="category-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category-type">Model Type:</label>
+                        <select id="category-type" class="form-select">
+                            <option value="cloud">Cloud (Nanonets)</option>
+                            <option value="hf">Hugging Face</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancel-category">Cancel</button>
+                <button class="btn btn-primary" id="create-category">Create</button>
+            </div>
+        </div>
+
+        <!-- Field Selection Modal -->
+        <div id="field-modal" class="modal">
+            <div class="modal-header">
+                <h3>Select Field Type</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="field-types" class="field-types">
+                    <!-- Field types will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/components/modal.js"></script>
+    <script src="js/components/canvas.js"></script>
+    <script src="js/components/annotation-engine.js"></script>
+    <script src="js/pages/upload.js"></script>
+    <script src="js/pages/annotate.js"></script>
+    <script src="js/pages/inference.js"></script>
+    <script src="js/pages/results.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

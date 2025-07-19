@@ -1,0 +1,415 @@
+/* Responsive Design */
+
+/* Large screens (1200px and up) */
+@media (min-width: 1200px) {
+    .content-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .documents-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* Medium screens (768px to 1199px) */
+@media (max-width: 1199px) {
+    .main-content {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+    
+    .header-content {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .annotation-sidebar {
+        width: 250px;
+    }
+    
+    .annotation-toolbar {
+        min-width: 240px;
+    }
+}
+
+/* Small screens (576px to 767px) */
+@media (max-width: 767px) {
+    .header-content {
+        flex-direction: column;
+        height: auto;
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+    
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: var(--spacing-md) !important;
+    }
+    
+    .main-nav {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    
+    .nav-btn {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+    }
+    
+    .main-content {
+        padding: var(--spacing-md);
+    }
+    
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
+    .documents-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing-md);
+    }
+    
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    /* Annotation Interface Mobile */
+    .annotation-interface {
+        height: calc(100vh - 120px);
+    }
+    
+    .annotation-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-md);
+    }
+    
+    .annotation-header .header-left,
+    .annotation-header .header-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .annotation-workspace {
+        flex-direction: column;
+    }
+    
+    .annotation-toolbar {
+        flex-direction: row;
+        min-width: auto;
+        width: 100%;
+        padding: var(--spacing-sm);
+        overflow-x: auto;
+    }
+    
+    .tool-group {
+        flex-direction: row;
+        border-bottom: none;
+        border-right: var(--border-width) solid var(--gray-200);
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .tool-group:last-child {
+        border-right: none;
+    }
+    
+    .annotation-sidebar {
+        width: 100%;
+        height: 200px;
+        border-left: none;
+        border-top: var(--border-width) solid var(--gray-200);
+        flex-direction: row;
+    }
+    
+    .sidebar-section {
+        flex: 1;
+        border-bottom: none;
+        border-right: var(--border-width) solid var(--gray-200);
+    }
+    
+    .sidebar-section:last-child {
+        border-right: none;
+    }
+    
+    .canvas-container {
+        height: 300px;
+    }
+    
+    /* Modal adjustments */
+    .modal {
+        width: 95%;
+        margin: var(--spacing-md);
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Toast adjustments */
+    .toast-container {
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+    }
+    
+    .toast {
+        min-width: auto;
+        width: 100%;
+    }
+}
+
+/* Extra small screens (575px and below) */
+@media (max-width: 575px) {
+    .app-title {
+        font-size: var(--font-size-lg);
+    }
+    
+    .app-title .app-icon {
+        font-size: var(--font-size-xl);
+    }
+    
+    .nav-btn {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+        min-width: 100px;
+    }
+    
+    .page-header h2 {
+        font-size: var(--font-size-xl);
+    }
+    
+    .card-header h3 {
+        font-size: var(--font-size-base);
+    }
+    
+    .documents-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .document-card {
+        max-width: none;
+    }
+    
+    .upload-area {
+        padding: var(--spacing-lg);
+    }
+    
+    .upload-icon {
+        font-size: 2rem;
+    }
+    
+    .upload-text p {
+        font-size: var(--font-size-base);
+    }
+    
+    /* Annotation interface for very small screens */
+    .annotation-header h2 {
+        font-size: var(--font-size-lg);
+    }
+    
+    .tool-btn {
+        width: 36px;
+        height: 36px;
+        font-size: var(--font-size-base);
+    }
+    
+    .annotation-sidebar {
+        height: 150px;
+    }
+    
+    .canvas-container {
+        height: 250px;
+    }
+    
+    .sidebar-section h4 {
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm);
+    }
+    
+    .annotations-list,
+    .properties-panel {
+        padding: var(--spacing-sm);
+    }
+    
+    .annotation-item {
+        padding: var(--spacing-xs);
+    }
+    
+    .annotation-label {
+        font-size: var(--font-size-xs);
+    }
+    
+    .annotation-coords {
+        font-size: 10px;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+    .annotation-interface {
+        height: calc(100vh - 80px);
+    }
+    
+    .annotation-workspace {
+        flex-direction: row;
+    }
+    
+    .annotation-toolbar {
+        flex-direction: column;
+        width: 60px;
+        min-width: 60px;
+        padding: var(--spacing-xs);
+    }
+    
+    .tool-group {
+        flex-direction: column;
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--gray-200);
+        padding: var(--spacing-xs) 0;
+    }
+    
+    .tool-btn {
+        width: 32px;
+        height: 32px;
+        font-size: var(--font-size-sm);
+    }
+    
+    .annotation-sidebar {
+        width: 200px;
+        height: auto;
+        flex-direction: column;
+        border-top: none;
+        border-left: var(--border-width) solid var(--gray-200);
+    }
+    
+    .sidebar-section {
+        border-right: none;
+        border-bottom: var(--border-width) solid var(--gray-200);
+    }
+    
+    .canvas-container {
+        height: auto;
+    }
+}
+
+/* Print styles */
+@media print {
+    .app-header,
+    .annotation-toolbar,
+    .annotation-sidebar,
+    .modal-overlay,
+    .toast-container {
+        display: none !important;
+    }
+    
+    .annotation-interface,
+    .canvas-container {
+        height: auto !important;
+    }
+    
+    .annotation-canvas {
+        max-width: 100% !important;
+        max-height: none !important;
+    }
+    
+    .page {
+        display: block !important;
+    }
+    
+    .card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: var(--border-width) solid var(--gray-300);
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --gray-100: #f0f0f0;
+        --gray-200: #e0e0e0;
+        --gray-300: #c0c0c0;
+        --gray-400: #a0a0a0;
+        --gray-500: #808080;
+        --gray-600: #606060;
+        --gray-700: #404040;
+        --gray-800: #202020;
+    }
+    
+    .tool-btn,
+    .btn,
+    .form-input,
+    .form-select {
+        border-width: 2px;
+    }
+    
+    .annotation-item.selected,
+    .category-item.selected {
+        border-width: 3px;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .loading-spinner {
+        animation: none;
+        border-top-color: var(--primary-color);
+    }
+    
+    .status-indicator {
+        animation: none;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --white: #1a1a1a;
+        --gray-50: #0f0f0f;
+        --gray-100: #1a1a1a;
+        --gray-200: #2a2a2a;
+        --gray-300: #3a3a3a;
+        --gray-400: #5a5a5a;
+        --gray-500: #7a7a7a;
+        --gray-600: #9a9a9a;
+        --gray-700: #bababa;
+        --gray-800: #dadada;
+        --gray-900: #ffffff;
+    }
+    
+    body {
+        background-color: var(--gray-100);
+        color: var(--gray-900);
+    }
+    
+    .annotation-canvas {
+        background: var(--gray-200);
+    }
+    
+    .canvas-container {
+        background: var(--gray-50);
+    }
+}
